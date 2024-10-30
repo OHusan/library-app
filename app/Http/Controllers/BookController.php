@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Models\Loan;
 use App\Models\Tag;
 
 class BookController extends Controller
@@ -15,11 +16,12 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::all();
+        $books = Book::latest()->with(['tag', 'loans'])->get();
 
         return view('welcome', [
             'books' => $books,
-            'tags' => Tag::all()
+            'tags' => Tag::all(),
+            'loans' => Loan::all(),
         ]);
     }
 
@@ -44,7 +46,9 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        $loan = $book->loans()->orderBy('due_date', 'desc')->first();
+
+        return view('show', compact('book', 'loan'));
     }
 
     /**

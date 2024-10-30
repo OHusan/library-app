@@ -9,7 +9,11 @@ class Book extends Model
 {
     use HasFactory;
 
-    public function tags() {
-        return $this->belongsToMany(Tag::class);
+    public function tag() {
+        return $this->belongsTo(Tag::class);
+    }
+
+    public function loans() {
+        return $this->hasMany(Loan::class);
     }
 }

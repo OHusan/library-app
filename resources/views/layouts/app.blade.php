@@ -28,7 +28,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="container">
+            <main class="container py-8">
                 {{ $slot }}
             </main>
         </div>

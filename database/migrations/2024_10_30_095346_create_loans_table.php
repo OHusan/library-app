@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\Tag;
+use App\Models\Book;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('books', function (Blueprint $table) {
+        Schema::create('loans', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('author');
-            $table->date('published_year');
-            $table->string('description');
-            $table->foreignIdFor(Tag::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Book::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->timestamp('loaned_at');
+            $table->timestamp('due_date');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('books');
+        Schema::dropIfExists('loans');
     }
 };

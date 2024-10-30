@@ -21,6 +21,7 @@ class BookFactory extends Factory
             'title' => fake()->sentence(3),
             'author' => fake()->name,
             'published_year' => fake()->date(),
+            'description' => fake()->sentence(300),
             'tag_id' => Tag::factory()
         ];
     }
