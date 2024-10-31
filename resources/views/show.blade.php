@@ -1,5 +1,10 @@
 @php
-    $showModal = false;
+    use Carbon\Carbon;
+
+    $nowDate = Carbon::now()->format('Y-m-d');
+    $dueDate = $loan ? Carbon::parse($loan->due_date)->format('Y-m-d') : $nowDate;
+
+    $currentDate = max($dueDate, $nowDate);
 @endphp
 
 <x-app-layout>
@@ -16,13 +21,22 @@
     </div>
 
     <div class="flex flex-col items-center justify-center mt-8 gap-4">
-        <p class="text-xl">Loaned until: {{ $loan->due_date }}</p>
-        <x-button onclick="add()">Loan book</x-button>
+        @if ($loan && $dueDate > $nowDate)
+            <p class="text-xl">Loaned until: {{ $loan->due_date }}</p>
+        @endif
+
+        @auth
+            <form method="POST" action="/book" class="flex flex-col gap-4">
+                @csrf
+
+                <input type="hidden" name="book_id" value={{ $book->id }} />
+                <input type="hidden" name="user_id" value={{ Auth::user()->id }} />
+                <input type="hidden" name="loaned_at" value={{ Carbon::now() }} />
+
+                <input type="date" name="due_date" min="{{ $currentDate }}" />
+
+                <x-button type="submit">Loan book</x-button>
+            </form>
+        @endauth
     </div>
 </x-app-layout>
-
-<script>
-    const add = () => {
-        console.log('test')
-    }
-</script>
