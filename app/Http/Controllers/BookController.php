@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPlaced;
 use App\Models\Book;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookRequest;
+use Illuminate\Support\Arr;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Loan;
 use App\Models\Tag;
+use Request;
 
 class BookController extends Controller
 {
@@ -38,7 +41,18 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        //
+
+        $attributes = $request->validate([
+            'title' => ['required'],
+            'author' => ['required'],
+            'published_year' => ['required', 'date'],
+            'description' => ['required'],
+            'tag_id' => ['required']
+        ]);
+
+        Book::create($attributes);
+
+        return redirect('welcome');
     }
 
     /**
@@ -46,17 +60,18 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
+        $tags = Tag::all();
         $loan = $book->loans()->orderBy('due_date', 'desc')->first();
 
-        return view('show', compact('book', 'loan'));
+        return view('show', compact('book', 'loan', 'tags'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Book $book)
+    public function edit(StoreBookRequest $request)
     {
-        //
+
     }
 
     /**
@@ -64,7 +79,16 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book)
     {
-        //
+        $attributes = $request->validate([
+            'title' => ['required'],
+            'author' => ['required'],
+            'published_year' => ['required', 'date'],
+            'description' => ['required'],
+            'tag_id' => ['required']
+        ]);
+        $book->update($attributes);
+
+        return redirect('/');
     }
 
     /**

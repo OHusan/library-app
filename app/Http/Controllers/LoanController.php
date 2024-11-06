@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLoanRequest;
-use App\Http\Requests\UpdateLoanRequest;
+use App\Models\Book;
 use App\Models\Loan;
 
 class LoanController extends Controller
@@ -23,7 +23,8 @@ class LoanController extends Controller
     }
 
     public function show(Loan $loan) {
-        $books = Loan::query()->where('user_id', auth()->user()->id)->get();
+        $loans = Loan::query()->where('user_id', auth()->user()->id)->get('book_id');
+        $books = Book::whereIn('id', $loans->pluck('book_id'))->get();
 
         return view('my-loans', compact('books', 'loan'));
     }

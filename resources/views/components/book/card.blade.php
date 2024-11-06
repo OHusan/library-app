@@ -8,7 +8,7 @@
 @endphp
 
 <x-panel>
-    <a href="/book/{{ $book->title }}" class="flex flex-col text-center">
+    <a href="/book/{{ $book->id }}" class="flex flex-col text-center">
 
         <span class="self-start text-sm">{{ $date->year }}</span>
 

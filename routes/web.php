@@ -5,23 +5,28 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\StephenKingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [BookController::class, 'index'])->name('home');
-Route::get('/book/{book:title}', [BookController::class, 'show']);
+Route::get('/book/{book:id}', [BookController::class, 'show']);
 
 Route::middleware('guest')->group(function () {
-
     Route::get('/register', [RegisteredUserController::class, 'create']);
     Route::post('/register', [RegisteredUserController::class, 'store']);
 
     Route::get('/login', [SessionController::class, 'create']);
-    Route::post('/login', [SessionController::class,'store']);
+    Route::post('/login', [SessionController::class, 'store']);
 });
 
 Route::middleware('auth')->group(function () {
     Route::post('/book', [LoanController::class, 'store']);
     Route::get('/my-loans', [LoanController::class, 'show'])->name('my-loans');
+
+    Route::post('/new-book', [BookController::class,'store']);
+    Route::put('/book/{book:id}', [BookController::class, 'update']);
+
+    Route::get('/stephen-king', [StephenKingController::class, 'index'])->name('stephen-king');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -30,4 +35,4 @@ Route::middleware('auth')->group(function () {
 
 Route::delete('/logout', [SessionController::class, 'destroy'])->middleware('auth');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

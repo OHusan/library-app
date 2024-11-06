@@ -1,7 +1,3 @@
-@php
-    dd($books[0]);
-@endphp
-
 <x-app-layout>
     <h1 class="text-9xl">Hello world</h1>
 
