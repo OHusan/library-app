@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Loan;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Auth;
 use Request;
 
 class BookController extends Controller
@@ -86,9 +87,11 @@ class BookController extends Controller
             'description' => ['required'],
             'tag_id' => ['required']
         ]);
-        $book->update($attributes);
 
-        return redirect('/');
+        if(Auth::user()->id === 13){
+            $book->update($attributes);
+        }
+            return redirect('/');
     }
 
     /**
